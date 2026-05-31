@@ -1,0 +1,1 @@
+# Diagn-stico-Emocional-Quanto-Voc-Est-Se-Perdendo-Nessa-Rela-o-
