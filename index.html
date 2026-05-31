@@ -139,17 +139,17 @@ body{background:var(--black);color:var(--white);font-family:'Jost',sans-serif;fo
 .result-list li::before{content:'->';color:var(--gold);flex-shrink:0;}
 
 /* Caixa de upsell bloqueado */
-.locked-box{background:rgba(10,10,10,0.8);border:1px solid rgba(201,168,76,0.2);padding:28px;margin-bottom:20px;position:relative;overflow:hidden;}
-.locked-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent);}
-.locked-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:20px;}
-.lock-emoji{font-size:28px;flex-shrink:0;}
-.locked-title{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:400;color:var(--white);margin-bottom:6px;line-height:1.3;}
+.locked-box{background:transparent;border:none;border-top:1px solid rgba(201,168,76,0.1);padding:28px 0 8px;margin-bottom:20px;position:relative;}
+.locked-box::before{content:'';display:none;}
+.locked-header{display:flex;align-items:center;gap:14px;margin-bottom:16px;}
+.lock-emoji{font-size:16px;flex-shrink:0;opacity:0.4;}
+.locked-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:var(--white-dim);margin-bottom:4px;line-height:1.3;font-style:italic;}
 .locked-desc{font-size:13px;color:var(--white-dim);line-height:1.6;}
 .locked-price-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
-.locked-price{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--gold);}
-.locked-price small{font-size:16px;vertical-align:super;margin-right:2px;}
-.btn-unlock{background:var(--gold);color:var(--black);border:none;padding:14px 28px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:all 0.3s;animation:pulse 2.5s infinite;white-space:nowrap;}
-.btn-unlock:hover{background:var(--gold-light)}
+.locked-price{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--white-dim);opacity:0.7;}
+.locked-price small{font-size:13px;vertical-align:super;margin-right:2px;}
+.btn-unlock{background:transparent;color:var(--gold);border:1px solid rgba(201,168,76,0.4);padding:10px 24px;font-family:'Jost',sans-serif;font-size:11px;font-weight:400;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:all 0.3s;white-space:nowrap;}
+.btn-unlock:hover{border-color:var(--gold);background:rgba(201,168,76,0.08);}
 .btn-unlock-full{width:100%;background:var(--gold);color:var(--black);border:none;padding:18px;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:all 0.3s;margin-bottom:10px;}
 .btn-unlock-full:hover{background:var(--gold-light)}
 .secure-note{text-align:center;font-size:11px;color:rgba(200,191,168,0.4);display:flex;align-items:center;justify-content:center;gap:6px;}
@@ -599,7 +599,7 @@ function renderResultPage(){
         </div>
         <div class="locked-price-row" style="margin-top:16px">
           <div class="locked-price"><small>R$</small>19<span style="font-size:16px">,90</span></div>
-          <button class="btn-unlock" onclick="window.open('https://go.hotmart.com/W106068146U','_blank')">[DESBLOQUEAR] Desbloquear</button>
+          <button class="btn-unlock" onclick="window.open('https://go.hotmart.com/W106068146U','_blank')">Desbloquear</button>
         </div>
       </div>
     `;
@@ -622,7 +622,7 @@ function renderResultPage(){
         </div>
         <div class="locked-price-row" style="margin-top:16px">
           <div class="locked-price"><small>R$</small>27<span style="font-size:16px">,90</span></div>
-          <button class="btn-unlock" onclick="window.open('https://go.hotmart.com/W106068146U','_blank')">[DESBLOQUEAR] Desbloquear</button>
+          <button class="btn-unlock" onclick="window.open('https://go.hotmart.com/W106068146U','_blank')">Desbloquear</button>
         </div>
       </div>
     `;
@@ -645,7 +645,7 @@ function renderResultPage(){
         </div>
         <div class="locked-price-row" style="margin-top:16px">
           <div class="locked-price"><small>R$</small>47<span style="font-size:16px">,90</span></div>
-          <button class="btn-unlock" onclick="window.open('https://go.hotmart.com/W106068146U','_blank')">[DESBLOQUEAR] Desbloquear</button>
+          <button class="btn-unlock" onclick="window.open('https://go.hotmart.com/W106068146U','_blank')">Desbloquear</button>
         </div>
       </div>
     `;
@@ -695,10 +695,33 @@ function renderResultPage(){
   if(unlockedSteps < 3){
     innerHTML += `
       <div class="section-sep"></div>
-      <div style="text-align:center;padding:24px;border:1px solid rgba(201,168,76,0.08);background:rgba(201,168,76,0.03)">
-        <p style="font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:8px">Em breve</p>
-        <p style="font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;color:var(--white-dim);margin-bottom:14px">Método P.O.S.E. . Dra. Aline Zanette</p>
-        <a href="https://metodopose.vercel.app" target="_blank" style="font-size:11px;color:var(--gold);letter-spacing:0.15em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid rgba(201,168,76,0.3);padding-bottom:2px">Entrar na lista prioritária -></a>
+      <div style="background:var(--black-card);border:1px solid rgba(201,168,76,0.15);padding:28px 24px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent)"></div>
+        <p style="font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px">Em breve - Lancamento</p>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;color:var(--white);margin-bottom:16px;line-height:1.3">Metodo P.O.S.E.<br><em style="color:var(--gold-light)">Dra. Aline Zanette</em></h3>
+        <p style="font-size:14px;color:var(--white-dim);line-height:1.8;margin-bottom:16px">O Metodo P.O.S.E. e um programa clinico desenvolvido pela Dra. Aline Zanette para ajudar voce a recuperar sua posicao emocional dentro dos relacionamentos - sem jogos, sem manipulacao, sem dependencia afetiva.</p>
+        <p style="font-size:14px;color:var(--white-dim);line-height:1.8;margin-bottom:20px">Com base em 15 anos de experiencia clinica em saude mental, o metodo trabalha quatro pilares fundamentais para o reposicionamento emocional:</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
+          <div style="flex:1;min-width:100px;border:1px solid rgba(201,168,76,0.2);padding:12px;text-align:center">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold)">P</div>
+            <div style="font-size:10px;color:var(--white-dim);letter-spacing:0.1em;text-transform:uppercase;margin-top:4px">Posicione-se</div>
+          </div>
+          <div style="flex:1;min-width:100px;border:1px solid rgba(201,168,76,0.2);padding:12px;text-align:center">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold)">O</div>
+            <div style="font-size:10px;color:var(--white-dim);letter-spacing:0.1em;text-transform:uppercase;margin-top:4px">Organize-se</div>
+          </div>
+          <div style="flex:1;min-width:100px;border:1px solid rgba(201,168,76,0.2);padding:12px;text-align:center">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold)">S</div>
+            <div style="font-size:10px;color:var(--white-dim);letter-spacing:0.1em;text-transform:uppercase;margin-top:4px">Sustente-se</div>
+          </div>
+          <div style="flex:1;min-width:100px;border:1px solid rgba(201,168,76,0.2);padding:12px;text-align:center">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold)">E</div>
+            <div style="font-size:10px;color:var(--white-dim);letter-spacing:0.1em;text-transform:uppercase;margin-top:4px">Escolha-se</div>
+          </div>
+        </div>
+        <p style="font-size:13px;color:var(--white-dim);line-height:1.7;margin-bottom:20px;font-style:italic;border-left:2px solid var(--gold-dim);padding-left:14px">"Um metodo para voce voltar a ocupar sua propria vida. Nao para manipular o outro. Mas para se posicionar, valorizar e escolher a si mesma."</p>
+        <a href="https://metodopose.vercel.app" target="_blank" style="display:inline-block;background:var(--gold);color:var(--black);padding:14px 28px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none">Entrar na Lista Prioritaria</a>
+        <p style="font-size:11px;color:rgba(200,191,168,0.4);margin-top:10px">Gratuito - Sem compromisso - Acesso prioritario no lancamento</p>
       </div>
     `;
   }
