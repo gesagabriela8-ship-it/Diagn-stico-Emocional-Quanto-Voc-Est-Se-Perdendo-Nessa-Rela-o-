@@ -127,7 +127,7 @@ body{background:var(--black);color:var(--white);font-family:'Jost',sans-serif;fo
 /* Caixa de conteúdo desbloqueado */
 .unlocked-box{background:var(--black-card);border:1px solid rgba(201,168,76,0.15);padding:28px;margin-bottom:28px;}
 .unlocked-label{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
-.unlocked-label::after{content:'v DESBLOQUEADO';font-size:9px;color:#4CAF50;border:1px solid #4CAF50;padding:2px 8px;letter-spacing:0.1em;}
+.unlocked-label::after{content:'';display:none;letter-spacing:0.1em;}
 .content-text{font-size:14px;color:var(--white-dim);line-height:1.8;}
 .content-text p{margin-bottom:12px;}
 .content-text strong{color:var(--white);font-weight:400}
@@ -143,10 +143,10 @@ body{background:var(--black);color:var(--white);font-family:'Jost',sans-serif;fo
 .locked-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:var(--white-dim);margin-bottom:4px;line-height:1.3;font-style:italic;}
 .locked-desc{font-size:13px;color:var(--white-dim);line-height:1.6;}
 .locked-price-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
-.locked-price{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--white-dim);opacity:0.7;}
-.locked-price small{font-size:13px;vertical-align:super;margin-right:2px;}
-.btn-unlock{background:transparent;color:var(--gold);border:1px solid rgba(201,168,76,0.4);padding:10px 24px;font-family:'Jost',sans-serif;font-size:11px;font-weight:400;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:all 0.3s;white-space:nowrap;}
-.btn-unlock:hover{border-color:var(--gold);background:rgba(201,168,76,0.08);}
+.locked-price{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--gold);}
+.locked-price small{font-size:13px;vertical-align:super;margin-right:2px;color:var(--gold);}
+.btn-unlock{background:var(--gold);color:var(--black);border:none;padding:14px 28px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:all 0.3s;white-space:nowrap;}
+.btn-unlock:hover{background:var(--gold-light);}
 .btn-unlock-full{width:100%;background:var(--gold);color:var(--black);border:none;padding:18px;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:all 0.3s;margin-bottom:10px;}
 .btn-unlock-full:hover{background:var(--gold-light)}
 .secure-note{text-align:center;font-size:11px;color:rgba(200,191,168,0.4);display:flex;align-items:center;justify-content:center;gap:6px;}
@@ -595,7 +595,10 @@ function renderResultPage(){
           Próximo passo após o diagnóstico
         </div>
         <div class="locked-price-row" style="margin-top:16px">
-          <div class="locked-price"><small>R$</small>19<span style="font-size:16px">,90</span></div>
+          <div>
+            <div style="font-size:12px;color:var(--white-dim);margin-bottom:2px">De <s style="color:rgba(200,191,168,0.4)">R$ 37,90</s></div>
+            <div class="locked-price"><small>R$</small>19<span style="font-size:16px">,90</span></div>
+          </div>
           <button class="btn-unlock" onclick="window.open('https://go.hotmart.com/W106068146U','_blank')">Desbloquear</button>
         </div>
       </div>
@@ -618,7 +621,10 @@ function renderResultPage(){
           Você desbloqueou: Diagnóstico + O que está acontecendo
         </div>
         <div class="locked-price-row" style="margin-top:16px">
-          <div class="locked-price"><small>R$</small>27<span style="font-size:16px">,90</span></div>
+          <div>
+            <div style="font-size:12px;color:var(--white-dim);margin-bottom:2px">De <s style="color:rgba(200,191,168,0.4)">R$ 37,90</s></div>
+            <div class="locked-price"><small>R$</small>27<span style="font-size:16px">,90</span></div>
+          </div>
           <button class="btn-unlock" onclick="window.open('https://go.hotmart.com/W106068146U','_blank')">Desbloquear</button>
         </div>
       </div>
@@ -641,7 +647,10 @@ function renderResultPage(){
           Você desbloqueou: Diagnóstico + Padrões + O que evitar
         </div>
         <div class="locked-price-row" style="margin-top:16px">
-          <div class="locked-price"><small>R$</small>47<span style="font-size:16px">,90</span></div>
+          <div>
+            <div style="font-size:12px;color:var(--white-dim);margin-bottom:2px">De <s style="color:rgba(200,191,168,0.4)">R$ 67,90</s></div>
+            <div class="locked-price"><small>R$</small>47<span style="font-size:16px">,90</span></div>
+          </div>
           <button class="btn-unlock" onclick="window.open('https://go.hotmart.com/W106068146U','_blank')">Desbloquear</button>
         </div>
       </div>
