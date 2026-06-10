@@ -142,7 +142,7 @@ body{background:var(--black);color:var(--white);font-family:'Jost',sans-serif;fo
 .lock-emoji{font-size:16px;flex-shrink:0;opacity:0.4;}
 .locked-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:var(--white-dim);margin-bottom:4px;line-height:1.3;font-style:italic;}
 .locked-desc{font-size:13px;color:var(--white-dim);line-height:1.6;}
-.locked-price-row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.locked-price-row{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:20px;}
 .locked-price{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--gold);}
 .locked-price small{font-size:13px;vertical-align:super;margin-right:2px;color:var(--gold);}
 .btn-unlock{background:var(--gold);color:var(--black);border:none;padding:14px 28px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;cursor:pointer;transition:all 0.3s;white-space:nowrap;}
@@ -155,9 +155,14 @@ body{background:var(--black);color:var(--white);font-family:'Jost',sans-serif;fo
 .section-sep{width:100%;height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,0.2),transparent);margin:28px 0;}
 
 /* Plano 7 dias */
-.plan-day{background:var(--black-card);border:1px solid rgba(201,168,76,0.1);padding:18px 20px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;}
-.day-badge{background:var(--gold);color:var(--black);font-size:10px;font-weight:600;padding:4px 10px;flex-shrink:0;margin-top:2px;letter-spacing:0.1em;}
-.day-content{}
+.plan-day{background:var(--black-card);border:1px solid rgba(201,168,76,0.1);margin-bottom:8px;overflow:hidden;}
+.day-badge{background:var(--gold);color:var(--black);font-size:10px;font-weight:700;padding:3px 12px;letter-spacing:0.1em;flex-shrink:0;}
+.day-header{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;user-select:none;}
+.day-header:hover{background:rgba(201,168,76,0.04);}
+.day-arrow{margin-left:auto;color:var(--gold-dim);font-size:12px;transition:transform 0.3s;}
+.day-arrow.open{transform:rotate(180deg);}
+.day-content{padding:0 20px 18px 20px;border-top:1px solid rgba(201,168,76,0.08);}
+.day-content.hidden{display:none;}
 .day-title{font-size:13px;color:var(--white);font-weight:400;margin-bottom:5px;}
 .day-text{font-size:13px;color:var(--white-dim);line-height:1.65;}
 
@@ -267,7 +272,7 @@ footer{border-top:1px solid rgba(201,168,76,0.08);padding:32px 24px;text-align:c
         <input type="tel" class="field-input" id="inputWhats" placeholder="(00) 00000-0000">
       </div>
       <button class="btn-gold" onclick="startTest()">Iniciar Avaliação -></button>
-      <p class="privacy-note">[BLOQUEADO] Seus dados estão protegidos. Não compartilhamos nada.</p>
+      <p class="privacy-note">Seus dados estão protegidos. Não compartilhamos nada.</p>
     </div>
   </div>
 </div>
@@ -438,7 +443,24 @@ const content = {
 // == ESTADO ==
 const notifNames=["Marina S.","Juliana Ramos","Fernanda Costa","Camila Oliveira","Ana Paula M.","Beatriz Souza","Larissa Ferreira","Gabriela Lima","Patrícia Alves","Renata Cardoso","Tânia M.","Cristiane Lopes","Débora Nascimento","Priscila Santos","Vanessa R."];
 let currentQ=0,totalScore=0,userName="",timerSec=900,timerInterval,currentLevel=null;
-let unlockedSteps = 0; // 0=só diagnóstico, 1=padrões, 2=naoFazer, 3=plano
+let unlockedSteps = 0;
+
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  const transaction = params.get('transaction');
+  const source = params.get('itm_source');
+  const affParam = params.get('aff');
+  if(transaction || source === 'thankyoupage' || affParam){
+    unlockedSteps = 1;
+    try { sessionStorage.setItem('pose_unlocked','1'); } catch(e){}
+  }
+  try {
+    const stored = sessionStorage.getItem('pose_unlocked');
+    if(stored && !transaction && !source && !affParam){
+      unlockedSteps = parseInt(stored);
+    }
+  } catch(e){}
+})();
 const ALINE_PHOTO = document.getElementById('alinePhotoData').getAttribute('data-src');
 
 // Preços das etapas
@@ -453,6 +475,19 @@ const hotmartLinks = [
 // Notif rotativo
 let ni=0;
 setInterval(()=>{ni=(ni+1)%notifNames.length;const el=document.getElementById('notifName');if(el)el.textContent=notifNames[ni];},4000);
+
+function toggleDay(header){
+  const arrow = header.querySelector('.day-arrow');
+  const content = header.nextElementSibling;
+  const isOpen = !content.classList.contains('hidden');
+  if(isOpen){
+    content.classList.add('hidden');
+    arrow.classList.remove('open');
+  } else {
+    content.classList.remove('hidden');
+    arrow.classList.add('open');
+  }
+}
 
 function goTo(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
 
@@ -512,7 +547,7 @@ function renderResultPage(){
   // -- ETAPA 1: DIAGNÓSTICO (sempre visível) --
   innerHTML += `
     <div style="text-align:center;margin-bottom:20px">
-      <div style="font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:14px">v Análise concluída - ${questions.length} respostas processadas</div>
+      <div style="font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:14px">Análise Concluída</div>
       <span class="result-badge ${lv.badge}">${lv.emoji} ${lv.label}</span>
       <h2 class="result-main-title" style="margin-top:14px">${lv.name}</h2>
       <p class="result-score">Pontuação: <strong>${totalScore}/${questions.length*5}</strong></p>
@@ -563,7 +598,6 @@ function renderResultPage(){
           <div class="day-content">
             <div class="day-title">${p.titulo}</div>
             <div class="day-text">${textoHTML}</div>
-          </div>
         </div>`;
       }).join('');
     innerHTML += `
@@ -585,14 +619,9 @@ function renderResultPage(){
       <div class="section-sep"></div>
       <div class="locked-box" id="nextLock">
         <div class="locked-header">
-          <div class="lock-emoji">[BLOQUEADO]</div>
-          <div>
-            <div class="locked-title">O Que Pode Estar Acontecendo</div>
+          <div class="locked-title">O Que Pode Estar Acontecendo</div>
             <p class="locked-desc">Descubra os padrões emocionais que podem estar mantendo você nessa situação - e por que eles são tão difíceis de romper.</p>
           </div>
-        </div>
-        <div style="margin-top:16px;padding:14px;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.1);font-size:12px;color:var(--white-dim)">
-          Próximo passo após o diagnóstico
         </div>
         <div class="locked-price-row" style="margin-top:16px">
           <div>
@@ -609,24 +638,35 @@ function renderResultPage(){
   if(unlockedSteps === 1){
     innerHTML += `
       <div class="section-sep"></div>
-      <div class="locked-box" id="nextLock">
-        <div class="locked-header">
-          <div class="lock-emoji">[BLOQUEADO]</div>
-          <div>
-            <div class="locked-title">O Que Não Fazer Agora</div>
-            <p class="locked-desc">Evite os erros mais comuns que aumentam o sofrimento emocional e enfraquecem ainda mais sua posição na relação.</p>
+      <div style="background:linear-gradient(135deg,rgba(10,10,10,0.95) 0%,rgba(30,22,5,0.98) 100%);border:1px solid rgba(201,168,76,0.45);padding:36px 28px;margin-bottom:20px;position:relative;overflow:hidden;text-align:center;" id="nextLock">
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),#fff8e1,var(--gold),transparent);"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,0.3),transparent);"></div>
+        <div style="display:inline-block;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);padding:5px 16px;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;">Próximo Passo</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;color:var(--white);line-height:1.3;margin-bottom:6px;">O Que Não Fazer</h3>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;font-style:italic;color:var(--gold);line-height:1.3;margin-bottom:18px;">Agora</h3>
+        <p style="font-size:14px;color:var(--white-dim);line-height:1.8;max-width:400px;margin:0 auto 24px;">Evite os erros mais comuns que aumentam o sofrimento emocional e enfraquecem ainda mais sua posição dentro da relação — antes que seja tarde demais.</p>
+        <div style="display:flex;justify-content:center;gap:24px;margin-bottom:24px;flex-wrap:wrap;">
+          <div style="text-align:center;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);line-height:1;">5</div>
+            <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--white-dim);margin-top:2px;">Erros Comuns</div>
+          </div>
+          <div style="width:1px;background:rgba(201,168,76,0.2);"></div>
+          <div style="text-align:center;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);line-height:1;">1</div>
+            <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--white-dim);margin-top:2px;">Conduta clara</div>
+          </div>
+          <div style="width:1px;background:rgba(201,168,76,0.2);"></div>
+          <div style="text-align:center;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);line-height:1;">0</div>
+            <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--white-dim);margin-top:2px;">Arrependimentos</div>
           </div>
         </div>
-        <div style="margin-top:16px;padding:14px;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.1);font-size:12px;color:var(--white-dim)">
-          Você desbloqueou: Diagnóstico + O que está acontecendo
+        <div style="margin-bottom:20px;">
+          <div style="font-size:12px;color:rgba(200,191,168,0.5);margin-bottom:6px;">De <s>R$ 37,90</s> por apenas</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:var(--gold);line-height:1;"><small style="font-size:22px;vertical-align:super;">R$</small>27<span style="font-size:32px">,90</span></div>
         </div>
-        <div class="locked-price-row" style="margin-top:16px">
-          <div>
-            <div style="font-size:12px;color:var(--white-dim);margin-bottom:2px">De <s style="color:rgba(200,191,168,0.4)">R$ 37,90</s></div>
-            <div class="locked-price"><small>R$</small>27<span style="font-size:16px">,90</span></div>
-          </div>
-          <button class="btn-unlock" onclick="window.open('https://go.hotmart.com/W106068146U','_blank')">Desbloquear</button>
-        </div>
+        <button class="btn-unlock" onclick="window.open('https://go.hotmart.com/W106068146U','_blank')" style="padding:16px 40px;font-size:12px;letter-spacing:0.25em;">Quero Saber O Que Evitar</button>
+        <p style="font-size:11px;color:rgba(200,191,168,0.35);margin-top:12px;">Acesso imediato - Baseado no seu resultado específico</p>
       </div>
     `;
   }
@@ -635,24 +675,37 @@ function renderResultPage(){
   if(unlockedSteps === 2){
     innerHTML += `
       <div class="section-sep"></div>
-      <div class="locked-box" id="nextLock">
-        <div class="locked-header">
-          <div class="lock-emoji">[BLOQUEADO]</div>
-          <div>
-            <div class="locked-title">Plano de Reposicionamento Emocional - 7 Dias</div>
-            <p class="locked-desc">Receba seu plano personalizado com ações concretas para cada dia da próxima semana, baseado no seu resultado específico.</p>
+      <div style="background:linear-gradient(135deg,rgba(10,10,10,0.95) 0%,rgba(30,22,5,0.98) 100%);border:1px solid rgba(201,168,76,0.45);padding:36px 28px;margin-bottom:20px;position:relative;overflow:hidden;text-align:center;" id="nextLock">
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),#fff8e1,var(--gold),transparent);"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,0.3),transparent);"></div>
+        <div style="position:absolute;top:0;left:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,rgba(201,168,76,0.2),transparent);"></div>
+        <div style="position:absolute;top:0;right:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,rgba(201,168,76,0.2),transparent);"></div>
+        <div style="display:inline-block;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);padding:5px 16px;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;">Etapa Final</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;color:var(--white);line-height:1.3;margin-bottom:6px;">Plano de Reposicionamento</h3>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;font-style:italic;color:var(--gold);line-height:1.3;margin-bottom:18px;">Emocional — 7 Dias</h3>
+        <p style="font-size:14px;color:var(--white-dim);line-height:1.8;max-width:400px;margin:0 auto 24px;">Um plano dia a dia, criado especificamente para o seu resultado, com perguntas, exercícios e objetivos concretos para cada etapa da sua recuperação emocional.</p>
+        <div style="display:flex;justify-content:center;gap:24px;margin-bottom:24px;flex-wrap:wrap;">
+          <div style="text-align:center;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);line-height:1;">7</div>
+            <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--white-dim);margin-top:2px;">Dias</div>
+          </div>
+          <div style="width:1px;background:rgba(201,168,76,0.2);"></div>
+          <div style="text-align:center;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);line-height:1;">7</div>
+            <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--white-dim);margin-top:2px;">Exercícios</div>
+          </div>
+          <div style="width:1px;background:rgba(201,168,76,0.2);"></div>
+          <div style="text-align:center;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);line-height:1;">1</div>
+            <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--white-dim);margin-top:2px;">Resultado</div>
           </div>
         </div>
-        <div style="margin-top:16px;padding:14px;background:rgba(201,168,76,0.04);border:1px solid rgba(201,168,76,0.1);font-size:12px;color:var(--white-dim)">
-          Você desbloqueou: Diagnóstico + Padrões + O que evitar
+        <div style="margin-bottom:20px;">
+          <div style="font-size:12px;color:rgba(200,191,168,0.5);margin-bottom:6px;">De <s>R$ 67,90</s> por apenas</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:var(--gold);line-height:1;"><small style="font-size:22px;vertical-align:super;">R$</small>47<span style="font-size:32px">,90</span></div>
         </div>
-        <div class="locked-price-row" style="margin-top:16px">
-          <div>
-            <div style="font-size:12px;color:var(--white-dim);margin-bottom:2px">De <s style="color:rgba(200,191,168,0.4)">R$ 67,90</s></div>
-            <div class="locked-price"><small>R$</small>47<span style="font-size:16px">,90</span></div>
-          </div>
-          <button class="btn-unlock" onclick="window.open('https://go.hotmart.com/W106068146U','_blank')">Desbloquear</button>
-        </div>
+        <button class="btn-unlock" onclick="window.open('https://go.hotmart.com/W106068146U','_blank')" style="padding:16px 40px;font-size:12px;letter-spacing:0.25em;">Quero Meu Plano Agora</button>
+        <p style="font-size:11px;color:rgba(200,191,168,0.35);margin-top:12px;">Acesso imediato - Personalizado para o seu resultado</p>
       </div>
     `;
   }
@@ -679,7 +732,6 @@ function renderResultPage(){
             <div style="font-size:13px;color:var(--white-dim)">v <strong style="color:var(--white);font-weight:400">O que está acontecendo</strong> - os padrões identificados</div>
             <div style="font-size:13px;color:var(--white-dim)">v <strong style="color:var(--white);font-weight:400">O que evitar</strong> - os erros que aprofundam o desgaste</div>
             <div style="font-size:13px;color:var(--white-dim)">v <strong style="color:var(--white);font-weight:400">O que fazer</strong> - seu plano de reposicionamento de 7 dias</div>
-          </div>
         </div>
         <div class="pose-pillars">
           <div class="pose-pillar"><strong>P</strong><span>Posicione-se</span></div>
@@ -723,7 +775,6 @@ function renderResultPage(){
           <div style="flex:1;min-width:100px;border:1px solid rgba(201,168,76,0.2);padding:12px;text-align:center">
             <div style="font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold)">E</div>
             <div style="font-size:10px;color:var(--white-dim);letter-spacing:0.1em;text-transform:uppercase;margin-top:4px">Escolha-se</div>
-          </div>
         </div>
         <p style="font-size:13px;color:var(--white-dim);line-height:1.7;margin-bottom:20px;font-style:italic;border-left:2px solid var(--gold-dim);padding-left:14px">"Um metodo para voce voltar a ocupar sua propria vida. Nao para manipular o outro. Mas para se posicionar, valorizar e escolher a si mesma."</p>
         <a href="https://metodopose.vercel.app" target="_blank" style="display:inline-block;background:var(--gold);color:var(--black);padding:14px 28px;font-family:'Jost',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;text-decoration:none">Entrar na Lista Prioritaria</a>
