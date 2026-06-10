@@ -617,19 +617,35 @@ function renderResultPage(){
   if(unlockedSteps === 0){
     innerHTML += `
       <div class="section-sep"></div>
-      <div class="locked-box" id="nextLock">
-        <div class="locked-header">
-          <div class="locked-title">O Que Pode Estar Acontecendo</div>
-            <p class="locked-desc">Descubra os padrões emocionais que podem estar mantendo você nessa situação - e por que eles são tão difíceis de romper.</p>
+      <div style="background:linear-gradient(135deg,rgba(10,10,10,0.95) 0%,rgba(30,22,5,0.98) 100%);border:1px solid rgba(201,168,76,0.45);padding:36px 28px;margin-bottom:20px;position:relative;overflow:hidden;text-align:center;" id="nextLock">
+        <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),#fff8e1,var(--gold),transparent);"></div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(201,168,76,0.3),transparent);"></div>
+        <div style="display:inline-block;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);padding:5px 16px;font-size:9px;letter-spacing:0.35em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;">Próximo Passo</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:400;color:var(--white);line-height:1.3;margin-bottom:6px;">O Que Pode Estar</h3>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;font-style:italic;color:var(--gold);line-height:1.3;margin-bottom:18px;">Acontecendo</h3>
+        <p style="font-size:14px;color:var(--white-dim);line-height:1.8;max-width:400px;margin:0 auto 24px;">Descubra os padrões emocionais que podem estar mantendo você nessa situação — e por que eles são tão difíceis de romper sem clareza e direção.</p>
+        <div style="display:flex;justify-content:center;gap:24px;margin-bottom:24px;flex-wrap:wrap;">
+          <div style="text-align:center;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);line-height:1;">5</div>
+            <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--white-dim);margin-top:2px;">Padrões</div>
+          </div>
+          <div style="width:1px;background:rgba(201,168,76,0.2);"></div>
+          <div style="text-align:center;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);line-height:1;">1</div>
+            <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--white-dim);margin-top:2px;">Diagnóstico</div>
+          </div>
+          <div style="width:1px;background:rgba(201,168,76,0.2);"></div>
+          <div style="text-align:center;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);line-height:1;">+</div>
+            <div style="font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:var(--white-dim);margin-top:2px;">Clareza</div>
           </div>
         </div>
-        <div class="locked-price-row" style="margin-top:16px">
-          <div>
-            <div style="font-size:12px;color:var(--white-dim);margin-bottom:2px">De <s style="color:rgba(200,191,168,0.4)">R$ 37,90</s></div>
-            <div class="locked-price"><small>R$</small>19<span style="font-size:16px">,90</span></div>
-          </div>
-          <button class="btn-unlock" onclick="window.open('https://go.hotmart.com/W106068146U','_blank')">Desbloquear</button>
+        <div style="margin-bottom:20px;">
+          <div style="font-size:12px;color:rgba(200,191,168,0.5);margin-bottom:6px;">De <s>R$ 37,90</s> por apenas</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:52px;font-weight:300;color:var(--gold);line-height:1;"><small style="font-size:22px;vertical-align:super;">R$</small>19<span style="font-size:32px">,90</span></div>
         </div>
+        <button class="btn-unlock" onclick="window.open('https://go.hotmart.com/W106068146U','_blank')" style="padding:16px 40px;font-size:12px;letter-spacing:0.25em;">Quero Entender O Que Está Acontecendo</button>
+        <p style="font-size:11px;color:rgba(200,191,168,0.35);margin-top:12px;">Acesso imediato - Baseado no seu resultado específico</p>
       </div>
     `;
   }
